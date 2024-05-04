@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookLand", "BookLand\BookLand.csproj", "{7226F487-5030-4EE6-BC32-108A61FEBA8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookLand.Client", "BookLand.Client\BookLand.Client.csproj", "{5266FFF9-44E2-47AF-AD17-B64C1BC196C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7226F487-5030-4EE6-BC32-108A61FEBA8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7226F487-5030-4EE6-BC32-108A61FEBA8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7226F487-5030-4EE6-BC32-108A61FEBA8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7226F487-5030-4EE6-BC32-108A61FEBA8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5266FFF9-44E2-47AF-AD17-B64C1BC196C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5266FFF9-44E2-47AF-AD17-B64C1BC196C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5266FFF9-44E2-47AF-AD17-B64C1BC196C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5266FFF9-44E2-47AF-AD17-B64C1BC196C8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {94CF12B0-F2C0-45BF-A49C-D65D51A7285D}
+	EndGlobalSection
+EndGlobal
