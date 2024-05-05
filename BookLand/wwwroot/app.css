@@ -1,5 +1,20 @@
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+:root {
+    --c-main-bg: #171517;
+    --c-font-primary: #D4D3D4;
+    --c-font-secondary: #99979B;
+    --c-progress-bar: #F69099;
+    /* F69099 */
+    --font-primary: LilitaOne;
+    --font-secondary: LilitaOne;
+}
+
+body {
+    background-color: var(--c-main-bg) !important;
+}
+
+
+.is-hidden {
+    display: none !important;
 }
 
 a, .btn-link {

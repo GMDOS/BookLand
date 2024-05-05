@@ -1,0 +1,1 @@
+docker run -p 5432:5432 --env=POSTGRES_PASSWORD=Careca12 --env=PGDATA=/var/lib/postgresql/data --volume=/mnt/bloco/data/pgsql:/var/lib/postgresql/data --restart=unless-stopped --name pg -d postgres:latest

@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookLand", "BookLand\BookLand.csproj", "{7226F487-5030-4EE6-BC32-108A61FEBA8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookLand", "BookLand\BookLand.csproj", "{7226F487-5030-4EE6-BC32-108A61FEBA8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookLand.Client", "BookLand.Client\BookLand.Client.csproj", "{5266FFF9-44E2-47AF-AD17-B64C1BC196C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookLand.Client", "BookLand.Client\BookLand.Client.csproj", "{5266FFF9-44E2-47AF-AD17-B64C1BC196C8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "db", "db", "{C83349A5-D47B-41D3-9C4F-622DD34AC8E5}"
+	ProjectSection(SolutionItems) = preProject
+		db\db.sql = db\db.sql
+		db\docker.sh = db\docker.sh
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

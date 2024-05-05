@@ -1,12 +1,18 @@
 using BookLand.Client.Pages;
 using BookLand.Components;
+using static BookLand.Data.Pg;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddScoped(sp => new HttpClient{ BaseAddress = new Uri("https://localhost:7266")});
 
 var app = builder.Build();
 
@@ -30,5 +36,10 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BookLand.Client._Imports).Assembly);
+
+app.MapControllers();
+
+connectionString = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText("config.json"))?["connectionString"];
+
 
 app.Run();

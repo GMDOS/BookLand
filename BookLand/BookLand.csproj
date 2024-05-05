@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BookLand.Client\BookLand.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.4" />
+    <PackageReference Include="Npgsql" Version="8.0.2" />
   </ItemGroup>
 
 </Project>

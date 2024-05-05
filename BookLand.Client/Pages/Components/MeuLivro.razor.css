@@ -1,0 +1,103 @@
+﻿/* Carregar fontes */
+@font-face {
+    font-family: 'LilitaOne';
+    src: url('/fonts/LilitaOne-Regular.ttf') format('truetype');
+}
+
+.capa-no-photo {
+    color: var(--c-font-secondary);
+    padding: 0.5rem;
+    width: 6rem;
+    height: 10rem;
+    border-radius: 0.5rem;
+}
+
+.meu-livro {
+    display: flex;
+    padding: 0.6rem;
+    /* border: 0.06rem solid #ddd; */
+    border-radius: 0.3125rem;
+    margin: 1%;
+}
+
+    .meu-livro img {
+        width: 6.8rem;
+        height: 10rem;
+        border-radius: 0.5rem;
+    }
+
+    .meu-livro .content {
+        /* border: 0.06rem solid #ddd; */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        margin-left: 0.625rem;
+        margin-top: 0.625rem;
+    }
+
+    .meu-livro .nome {
+        color: var(--c-font-primary);
+        font-family: var(--font-primary);
+        /* font-weight: bold; */
+        font-size: 1.25rem;
+        margin-bottom: 0.625rem;
+    }
+
+    .meu-livro .categorias {
+        font-size: 0.875rem;
+        font-family: var(--font-primary);
+        color: var(--c-font-secondary);
+        margin-bottom: 2rem;
+    }
+
+    .meu-livro .progress-bar {
+        border-radius: 0.5rem;
+        height: 0.35rem;
+        background: #ddd;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+        width: 14rem;
+    }
+
+        .meu-livro .progress-bar div {
+            height: 0.35rem;
+            background: var(--c-progress-bar);
+            width: 70%;
+            /* valor para alterar o progresso */
+        }
+
+    .meu-livro .paginas {
+        /* border: 0.06rem solid #ddd; */
+        font-family: var(--font-primary);
+        font-size: 0.75rem;
+        color: var(--c-font-secondary);
+        margin-top: 0.625rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .meu-livro .data {
+        /* border: 0.06rem solid #ddd; */
+        font-family: var(--font-primary);
+        font-size: 0.75rem;
+        color: var(--c-font-secondary);
+        margin-top: 0.625rem;
+        display: flex;
+        align-items: center;
+    }
+
+.estatisticas {
+    display: flex;
+    flex-direction: row;
+}
+
+    .estatisticas > * {
+        margin-right: 1rem;
+    }
+
+    .estatisticas p {
+        text-indent: 0.2rem;
+    }
