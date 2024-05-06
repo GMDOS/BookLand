@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
+using System.Diagnostics;
 using static BookLand.Client.Models.DBModels;
 using static BookLand.Data.Pg;
 
@@ -24,7 +25,7 @@ public class LivrosController : ControllerBase
         using NpgsqlDataReader reader = cmd.ExecuteReader();
 
         Livro? livro = GetData<Livro>(reader);
-
+        Debug.WriteLine("chamado");
         conexao.Close();
         conexao.Dispose();
         return livro;

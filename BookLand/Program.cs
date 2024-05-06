@@ -12,7 +12,12 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
-builder.Services.AddScoped(sp => new HttpClient{ BaseAddress = new Uri("https://localhost:7266")});
+// Precisa de httpclient por aqui também, visto que na primeira conexão o client usa ssr ao invés de csr
+builder.Services.AddScoped(sp =>
+    new HttpClient
+    {
+        BaseAddress = new Uri(builder.Configuration["FrontendUrl"] ?? "https://localhost:7266")
+    });
 
 var app = builder.Build();
 
