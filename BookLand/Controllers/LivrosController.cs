@@ -11,23 +11,22 @@ namespace BookLand.Controllers;
 [Route("API")]
 public class LivrosController : ControllerBase
 {
-    NpgsqlConnection conexao;
+    NpgsqlConnection sql;
     public LivrosController()
     {
-        conexao = ConectarAoBanco();
+        sql = ConectarAoBanco();
     }
     [HttpGet("ProcurarLivro/{isbn}")]
-    public Livro? ProcurarLivro(string isbn)
+    public async Task<IActionResult?> ProcurarLivro(string isbn)
     {
-
-        using NpgsqlCommand cmd = new NpgsqlCommand("SELECT * FROM livros WHERE isbn = @isbn", conexao);
+        using NpgsqlCommand cmd = new NpgsqlCommand("SELECT * FROM livros WHERE isbn = @isbn", sql);
         cmd.Parameters.AddWithValue("@isbn", isbn);
         using NpgsqlDataReader reader = cmd.ExecuteReader();
 
-        Livro? livro = GetData<Livro>(reader);
+        Livro? livro = await GetData<Livro>(reader);
         Debug.WriteLine("chamado");
-        conexao.Close();
-        conexao.Dispose();
-        return livro;
+        sql.Close();
+        sql.Dispose();
+        return Ok(livro);
     }
 }

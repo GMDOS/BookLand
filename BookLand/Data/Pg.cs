@@ -15,13 +15,13 @@ namespace BookLand.Data
             connection.Open();
             return connection;
         }
-        public static T? GetData<T>(NpgsqlDataReader reader) where T : new()
+        public static async Task<T?> GetData<T>(NpgsqlDataReader reader) where T : new()
         {
             if (!reader.HasRows)
             {
                 return default;
             }
-            reader.Read();
+            await reader.ReadAsync();
             T obj = new T();
             var properties = typeof(T).GetProperties();
 

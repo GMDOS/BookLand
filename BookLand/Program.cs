@@ -2,6 +2,7 @@ using BookLand.Client.Pages;
 using BookLand.Components;
 using static BookLand.Data.Pg;
 using System.Text.Json;
+using BookLand;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,12 +13,14 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddAntiforgery();
 // Precisa de httpclient por aqui também, visto que na primeira conexão o client usa ssr ao invés de csr
 builder.Services.AddScoped(sp =>
     new HttpClient
     {
-        BaseAddress = new Uri(builder.Configuration["FrontendUrl"] ?? "https://localhost:7266")
+        BaseAddress = new Uri(builder.Configuration["FrontendUrl"] ?? "http://localhost:5184")
     });
+
 
 var app = builder.Build();
 
@@ -34,8 +37,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles();
 app.UseAntiforgery();
+app.UseStaticFiles();
+
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
@@ -46,5 +50,5 @@ app.MapControllers();
 
 connectionString = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText("config.json"))?["connectionString"];
 
-
+app.UseMiddleware<AuthMiddleware>();
 app.Run();

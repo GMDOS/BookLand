@@ -1,0 +1,49 @@
+﻿@inject NavigationManager NavManager
+@inject HttpClient Http
+@page "/Cadastrar"
+@rendermode InteractiveAuto
+
+@using System.Net
+@using System.Net.Http
+@using System.Net.Http.Json
+
+@using BookLand.Client.Pages.Components;
+@using static BookLand.Client.Models.DBModels;
+<PageTitle>BookLand - Cadastrar</PageTitle>
+<div id="login">
+    <div>
+        <label for="Usuario">Usuario</label>
+        <InputText id="Usuario" @bind-Value="usuario.NomeUsuario" />
+    </div>
+    <div>
+        <label for="Email">E-mail</label>
+        <InputText id="Email" @bind-Value="usuario.Email" />
+    </div>
+    <div>
+        <label for="Senha">Senha</label>
+        <InputText id="Senha" type="password" @bind-Value="usuario.Senha" />
+    </div>
+@*     <div>
+        <label for="SenhaConfirmacao">Senha</label>
+        <InputText id="SenhaConfirmacao" type="password" @bind-Value="SenhaConfirmacao" />
+    </div> *@
+    <div>
+        <button @onclick="CadastrarNovoUsuario">Cadastrar</button>
+    </div>
+</div>
+
+@code {
+    Usuario usuario = new();
+    // public string SenhaConfirmacao { get; set; } = "";
+
+    private async Task CadastrarNovoUsuario()
+    {
+        var res = await Http.PostAsJsonAsync("/API/Cadastrar", usuario);
+        if (!res.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Deu ruim");
+            return;
+        }
+        NavManager.NavigateTo("/Login");
+    }
+}

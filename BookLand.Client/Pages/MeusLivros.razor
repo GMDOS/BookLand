@@ -1,4 +1,5 @@
 ﻿@inject HttpClient Http
+@inject NavigationManager NavManager
 @page "/"
 @rendermode InteractiveAuto
 
@@ -11,14 +12,17 @@
 <div id="meus-livros">
 
     <MeuLivro></MeuLivro>
-    <button @onclick="BuscarLivros"></button>
+    @* <button @onclick="BuscarLivros"></button> *@
 </div>
 
 @code {
-    private async Task BuscarLivros() => await Http.GetFromJsonAsync<Livro>("API/ProcurarLivro/teste");
+    // private async Task BuscarMeusLivros() => await Http.GetFromJsonAsync<Livro>("API/ProcurarLivro/teste");
 
     protected override async Task OnInitializedAsync()
     {
-        // BuscarLivros();
+        // NavManager.NavigateTo("/Login");
+
+        await Http.GetFromJsonAsync<Livro>("API/ProcurarLivro/teste");
+
     }
 }
