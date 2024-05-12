@@ -43,7 +43,6 @@ public class UsuariosController : ControllerBase
                     Path = "/",
                     HttpOnly = true, // Recomendado para segurança adicional
                     //Secure = true,   // Recomendado se estiver usando HTTPS
-                                     // Domain = "seu-dominio.com"
                 };
 
                 // Adicionar o cookie ao cabeçalho da resposta

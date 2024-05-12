@@ -9,20 +9,38 @@
 @using BookLand.Client.Pages.Components;
 @using static BookLand.Client.Models.DBModels;
 <PageTitle>Meus Livros</PageTitle>
+
 <div id="meus-livros">
 
     <MeuLivro></MeuLivro>
-    @* <button @onclick="BuscarLivros"></button> *@
+
+    @if (meusLivros == null)
+    {
+        <p><em>Loading...</em></p>
+    } else
+    {
+        @foreach (var meuLivro in meusLivros)
+        {
+            <MeuLivro></MeuLivro>
+        }
+    }
+
 </div>
+
+<dialog>
+    <button autofocus>Close</button>
+    <MeuLivro></MeuLivro>
+    @* <p>This modal dialog has a groovy backdrop!</p> *@
+</dialog>
+<button id="btn-add-livro" onclick="document.querySelector('dialog').showModal();">Adicionar Livro</button>
 
 @code {
     // private async Task BuscarMeusLivros() => await Http.GetFromJsonAsync<Livro>("API/ProcurarLivro/teste");
+    List<MeuLivro> meusLivros = new();
 
     protected override async Task OnInitializedAsync()
     {
-        // NavManager.NavigateTo("/Login");
-
-        await Http.GetFromJsonAsync<Livro>("API/ProcurarLivro/teste");
-
+        
+        // await Http.GetFromJsonAsync<Livro>("API/BuscarMeusLivros");
     }
 }

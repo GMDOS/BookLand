@@ -1,0 +1,21 @@
+﻿/* Carregar fontes */
+@font-face {
+    font-family: 'LilitaOne';
+    src: url('/fonts/LilitaOne-Regular.ttf') format('truetype');
+}
+/*main {
+    height: 100%;
+}*/
+#btn-add-livro {
+    font-family: var(--font-primary);
+    font-size: 1.2rem;
+    color: var(--c-font-primary);
+    height: 3rem;
+    background-color: #f69099;
+    position: fixed;
+    bottom: 0px;
+    border-radius: 1rem;
+    width: 96%;
+    margin-bottom: 2%;
+    margin-left: 2%;
+}

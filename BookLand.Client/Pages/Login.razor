@@ -36,9 +36,7 @@
             Console.WriteLine("Usuário ou senha incorreto");
             return;
         }
-        string token = await res.Content.ReadAsStringAsync();
-        var c = new Cookie();
-        
+        NavManager.NavigateTo("/");
     }
     private void Cadastrar()
     {

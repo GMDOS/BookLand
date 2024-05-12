@@ -12,9 +12,9 @@ public class DBModels
         public int AnoPublicacao { get; set; }
         public string Descricao { get; set; } = "";
         public string? Capa { get; set; }
-        public List<string>? Categorias { get; set; }
-        public List<string>? Autores { get; set; }
-        public List<string>? Imagens { get; set; }
+        public List<string>? Categorias { get; set; }=new();
+        public List<string>? Autores { get; set; }=new();
+        public List<string>? Imagens { get; set; }=new();
     }
 
     public class UsuarioLivro
