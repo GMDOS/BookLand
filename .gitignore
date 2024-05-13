@@ -363,4 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Configuração do banco de dados, pode ter conteúdo sensível
-BookLand/config.json
+/BookLand/config.json
