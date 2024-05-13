@@ -361,4 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-# BookLand/config.json
+
+# Configuração do banco de dados, pode ter conteúdo sensível
+BookLand/config.json
