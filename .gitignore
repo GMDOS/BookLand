@@ -360,4 +360,5 @@ MigrationBackup/
 .ionide/
 
 # Fody - auto-generated XML schema
-FodyWeavers.xsdBookLand/config.json
+FodyWeavers.xsd
+# BookLand/config.json
