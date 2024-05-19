@@ -14,12 +14,13 @@
 
     <MeuLivro></MeuLivro>
 
-    @if (meusLivros == null)
+    @if (meusLivrosItens == null)
     {
         <p><em>Loading...</em></p>
-    } else
+    }
+    else
     {
-        @foreach (var meuLivro in meusLivros)
+        @foreach (var meuLivro in meusLivrosItens)
         {
             <MeuLivro></MeuLivro>
         }
@@ -27,20 +28,112 @@
 
 </div>
 
-<dialog>
-    <button autofocus>Close</button>
-    <MeuLivro></MeuLivro>
+<dialog id="camera-modal">
+    <button id="camera-modal-close" autofocus>X</button>
+    <video id="camera"></video>
+    <video></video>
+    @* <input type="file" accept="image/*" capture> *@
+    @* <MeuLivro></MeuLivro> *@
     @* <p>This modal dialog has a groovy backdrop!</p> *@
 </dialog>
-<button id="btn-add-livro" onclick="document.querySelector('dialog').showModal();">Adicionar Livro</button>
+<button id="btn-add-livro" onclick="detectBarCode()">Adicionar Livro</button>
+<script src="https://cdn.jsdelivr.net/npm/@@undecaf/zbar-wasm@0.9.15/dist/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@@undecaf/barcode-detector-polyfill@0.9.20/dist/index.js"></script>
+<script>
+    // interop com js
+    window.addLivroPorISBN = (isbn) => {
+        DotNet.invokeMethodAsync('BookLand.Client', 'AddLivroPorISBN', isbn);
+    };
+
+    // passa a utilizar o polyfill caso o browser não suporte o BarcodeDetector
+    try {
+        window['BarcodeDetector'].getSupportedFormats()
+    } catch {
+        window['BarcodeDetector'] = barcodeDetectorPolyfill.BarcodeDetectorPolyfill
+    }
+    detectBarCode();
+    // função para lidar com a camera
+    async function detectBarCode() {
+        document.getElementById("camera-modal").showModal()
+        // check compatibility
+        if (!("BarcodeDetector" in globalThis)) {
+            console.log("Barcode Detector is not supported by this browser.");
+            return;
+        }
+
+        console.log("Barcode Detector supported!");
+
+        // create new detector
+        const barcodeDetector = new BarcodeDetector({
+            formats: ["code_39", "codabar", "ean_13"],
+        });
+
+        // create element and start video feed from the camera
+        const video = document.getElementById("camera")
+        const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+        video.srcObject = mediaStream;
+        await video.play();
+
+        let barcodes = [];
+        let lastBarcode = "";
+        // start detection
+        const handleDetect = async () => {
+            try {
+                const barcodesDetected = await barcodeDetector.detect(video);
+                barcodesDetected.forEach((barcode) => {
+                    barcodes = [];
+                    if (!barcodes.includes(barcode.rawValue)) {
+                        if (lastBarcode !== barcode.rawValue) {
+                            barcodes.push(barcode.rawValue);
+                            addLivroPorISBN(barcode.rawValue);
+                        } else {
+                            lastBarcode = barcode.rawValue;
+                        }
+                    }
+                }
+                );
+            } catch (err) {
+                console.log(err);
+            }
+
+            requestAnimationFrame(handleDetect);
+
+        };
+        requestAnimationFrame(handleDetect);
+    }
+
+</script>
 
 @code {
-    // private async Task BuscarMeusLivros() => await Http.GetFromJsonAsync<Livro>("API/ProcurarLivro/teste");
-    List<MeuLivro> meusLivros = new();
+    @* private static HttpClient httpClient;
+    private static MeusLivros _app; *@
 
+    public MeusLivros()
+    {
+        @* //deveria funcionar
+        httpClient = this.Http;
+        //aparentemente nao funciona
+        if (httpClient == null)
+        {
+            httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri(@"https://localhost:7266/");
+        } *@
+    }
+    // private async Task BuscarMeusLivros() => await Http.GetFromJsonAsync<Livro>("API/ProcurarLivro/teste");
+    List<Livro> meusLivrosItens = new();
     protected override async Task OnInitializedAsync()
     {
-        
-        // await Http.GetFromJsonAsync<Livro>("API/BuscarMeusLivros");
+
+        @* await Http.GetFromJsonAsync<Livro>("API/BuscarMeusLivros"); *@
+    }
+    [JSInvokable]
+    public async void AddLivroPorISBN(string isbn)
+    {
+        @* if (httpClient == null)
+        {
+            httpClient = new HttpClient();
+        } *@
+        await Http.GetFromJsonAsync<Livro>("API/AddLivro/" + isbn);
+        @* _app.meusLivrosItens.Add(new Livro()); *@
     }
 }

@@ -22,21 +22,37 @@ public class LivrosController : ControllerBase
     {
         sql = ConectarAoBanco();
     }
-    [HttpGet("ProcurarLivro/{isbn}")]
+    [HttpGet("AddLivro/{isbn}")]
     public async Task<IActionResult?> ProcurarLivro(string isbn)
     {
-        using NpgsqlCommand cmd = new NpgsqlCommand("SELECT * FROM livros WHERE isbn = @isbn", sql);
-        cmd.Parameters.AddWithValue("@isbn", isbn);
-        using NpgsqlDataReader reader = cmd.ExecuteReader();
-        Livro? livro = await GetData<Livro>(reader);
+
+
+        string? idUsuario = Auth.GetIdFromToken(Request.Cookies["Token"]!)!;
+        if (idUsuario == null)
+        {
+            return Unauthorized();
+        }
+
+        UsuarioLivro usuarioLivro = new();
+        usuarioLivro.Id = Guid.NewGuid();
+        usuarioLivro.IdUsuario = Guid.Parse(idUsuario);
+
+        Livro? livro = new();
+        using (NpgsqlCommand cmd = new NpgsqlCommand("SELECT * FROM livros WHERE isbn = @isbn", sql))
+        {
+            cmd.Parameters.AddWithValue("@isbn", isbn);
+            using NpgsqlDataReader reader = cmd.ExecuteReader();
+            livro = await GetData<Livro>(reader);
+
+        }
         if (livro != null)
         {
+            usuarioLivro.IdLivro = livro.Id;
+            VincularUsuarioLivro(usuarioLivro);
             return Ok(livro);
         }
         livro = new();
         // Se não foi, começa a catar dados e salva no DB
-        bool encontradoGoogle = false;
-
         var coverImageUrl = "";
 
         try
@@ -53,17 +69,18 @@ public class LivrosController : ControllerBase
             if (bookDataGoogle == null)
             {
                 Console.WriteLine("Falha ao ler dados do Google");
-            } else
+            }
+            else
             {
                 if (bookDataGoogle!.totalItems == 0)
                 {
                     Console.WriteLine("Livro não encontrado no Google Books");
                     return NotFound(livro);
-                } else
+                }
+                else
                 {
                     //por algum motivo os dados que voltam da pesquisa do googleapis não são completos e as vezes estão errados
                     //com o selflink é possível buscar os dados atualizados..
-                    encontradoGoogle = true;
 
                     var livroGoogle = await client.GetFromJsonAsync<ItemGoogle>(bookDataGoogle.items[0].selfLink);
 
@@ -76,7 +93,8 @@ public class LivrosController : ControllerBase
                     livro.Categorias = livroGoogle.volumeInfo.categories;
                 }
             }
-        } catch (Exception exc)
+        }
+        catch (Exception exc)
         {
             Console.WriteLine($"Falha ao ler dados do Google {exc}");
             Console.WriteLine(exc.ToString());
@@ -119,7 +137,8 @@ public class LivrosController : ControllerBase
         }
 
         using NpgsqlCommand cmdInsert = new NpgsqlCommand(@"INSERT INTO livros (
-                                                                             datainsert       
+                                                                             id
+                                                                            ,datainsert       
                                                                             ,isbn             
                                                                             ,titulo           
                                                                             ,quantidadepaginas
@@ -129,7 +148,9 @@ public class LivrosController : ControllerBase
                                                                             ,categorias       
                                                                             ,autores          
                                                                             ,imagens)
-                                                                VALUES(NOW()
+                                                                VALUES(
+                                                                       @id
+                                                                      ,NOW()
                                                                       ,@isbn             
                                                                       ,@titulo           
                                                                       ,@quantidadepaginas
@@ -139,17 +160,47 @@ public class LivrosController : ControllerBase
                                                                       ,@categorias       
                                                                       ,@autores          
                                                                       ,@imagens)", sql);
-        cmd.Parameters.AddWithValue("@isbn", isbn);
-        cmd.Parameters.AddWithValue("@titulo", livro.Titulo);
-        cmd.Parameters.AddWithValue("@quantidadepaginas", livro.QuantidadePaginas);
-        cmd.Parameters.AddWithValue("@anopublicacao", livro.AnoPublicacao);
-        cmd.Parameters.AddWithValue("@descricao", livro.Descricao);
-        cmd.Parameters.AddWithValue("@capa", livro.Capa ?? "");
-        cmd.Parameters.AddWithValue("@categorias", livro.Categorias ?? new());
-        cmd.Parameters.AddWithValue("@autores", livro.Autores ?? new());
-        cmd.Parameters.AddWithValue("@imagens", livro.Imagens ?? new());
+        livro.Id = Guid.NewGuid();
+
+        cmdInsert.Parameters.AddWithValue("@id", livro.Id);
+        cmdInsert.Parameters.AddWithValue("@isbn", isbn);
+        cmdInsert.Parameters.AddWithValue("@titulo", livro.Titulo);
+        cmdInsert.Parameters.AddWithValue("@quantidadepaginas", livro.QuantidadePaginas);
+        cmdInsert.Parameters.AddWithValue("@anopublicacao", livro.AnoPublicacao);
+        cmdInsert.Parameters.AddWithValue("@descricao", livro.Descricao);
+        cmdInsert.Parameters.AddWithValue("@capa", livro.Capa ?? "");
+        cmdInsert.Parameters.AddWithValue("@categorias", livro.Categorias ?? new());
+        cmdInsert.Parameters.AddWithValue("@autores", livro.Autores ?? new());
+        cmdInsert.Parameters.AddWithValue("@imagens", livro.Imagens ?? new());
+        await cmdInsert.ExecuteNonQueryAsync();
+
+
+        usuarioLivro.IdLivro = livro.Id;
+        VincularUsuarioLivro(usuarioLivro);
+
         return Ok(livro);
     }
+
+    public async void VincularUsuarioLivro(UsuarioLivro usuarioLivro)
+    {
+        using NpgsqlCommand cmdInsertUsuarioLivro = new NpgsqlCommand(@"INSERT INTO usuarioslivros (
+                                                                                                id
+                                                                                                ,idlivro
+                                                                                                ,idusuario
+                                                                                                ,paginaslidas)
+                                                                                                VALUES(
+                                                                                                      @id
+                                                                                                      ,@idlivro
+                                                                                                      ,@idusuario
+                                                                                                      ,@paginaslidas)
+                                                                        ON CONFLICT ON CONSTRAINT usuarioslivros_unique DO NOTHING;", sql);
+        cmdInsertUsuarioLivro.Parameters.AddWithValue("@id", usuarioLivro.Id);
+        cmdInsertUsuarioLivro.Parameters.AddWithValue("@idlivro", usuarioLivro.IdLivro!);
+        cmdInsertUsuarioLivro.Parameters.AddWithValue("@idusuario", usuarioLivro.IdUsuario!);
+        cmdInsertUsuarioLivro.Parameters.AddWithValue("@paginaslidas", 0);
+        await cmdInsertUsuarioLivro.ExecuteNonQueryAsync();
+    }
+
     [HttpGet("BuscarMeusLivros")]
     public async Task<IActionResult?> BuscarMeusLivros()
     {

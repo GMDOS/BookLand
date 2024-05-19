@@ -14,11 +14,12 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddAntiforgery();
-// Precisa de httpclient por aqui também, visto que na primeira conexão o client usa ssr ao invés de csr
+
+// Precisa de httpclient por aqui tambÃ©m, visto que na primeira conexÃ£o o client usa ssr ao invÃ©s de csr
 builder.Services.AddScoped(sp =>
     new HttpClient
     {
-        BaseAddress = new Uri(builder.Configuration["FrontendUrl"] ?? "http://localhost:5184")
+        BaseAddress = new Uri(builder.Configuration["FrontendUrl"] ?? "https://localhost:7266")
     });
 
 

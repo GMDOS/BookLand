@@ -33,6 +33,9 @@ ALTER TABLE UsuariosLivros ADD COLUMN IF NOT EXISTS IdUsuario UUID DEFAULT NULL;
 ALTER TABLE UsuariosLivros ADD COLUMN IF NOT EXISTS DataInsert TIMESTAMP DEFAULT NOW();
 ALTER TABLE UsuariosLivros ADD COLUMN IF NOT EXISTS PaginasLidas INTEGER DEFAULT 0;
 
+ALTER TABLE usuarioslivros DROP CONSTRAINT IF EXISTS usuarioslivros_unique;
+ALTER TABLE usuarioslivros ADD CONSTRAINT usuarioslivros_unique UNIQUE (idlivro,idusuario);
+
 CREATE TABLE IF NOT EXISTS Comentarios (
     Id UUID PRIMARY KEY DEFAULT uuid_generate_v4()
 );
